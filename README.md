@@ -2,11 +2,15 @@
 
 JupyterHub is open source and creates a space for groups to collaborate on notebooks. It is customizable, flexible, scalable, and portable, used for Jupyter Notebook, Jupyter Lab, RStudio, nteract and more. It can be deployed on Kubernetes using Docker allowing it to be scaled and maintained. 
 
+![image](https://user-images.githubusercontent.com/89024359/187980876-c4eaba28-bb0d-4ed5-826d-40ef83a71267.png)
+
 <h2>What is HELM?</h2>
 
 HELM is a package manager for Kubernetes. Instead of having a bunch of yaml files for a service or application you want to deploy into Kubernetes (like ConfigMap, secret, services, K8s User with permissions, etc), Helm compiles all of these files into one which is called a Helm Chart. You can create a Helm Chart and push it to a repository for other Developers to use, or you can download and use exiting ones. Database and Monitoring Apps all have configurations developers have already made. You can view these charts by using command line “help search <keyword>" or searching on Helm Hub. There are also private registries to share in organizations.
 
 It is also a templating Engine, meaning it can be used for multiple pods that have almost the same yaml config and use dynamic replacement of values.
+
+![image](https://user-images.githubusercontent.com/89024359/187981293-1f4ccb73-1c95-45ab-bc90-9bc5fba90549.png)
 
 
 Helm Chart Structure:
@@ -15,6 +19,8 @@ Helm Chart Structure:
 3.	Values.yaml > values for the template files
 4.	Charts folder > chart dependencies
 5.	Templates folder > the actual template files
+
+![image](https://user-images.githubusercontent.com/89024359/187981540-d3233a8b-be3c-42f1-a6dd-47f5ea002dff.png)
 
 What does this mean!?
 When you execute “helm install 'chartname' ” the template files will be filled with the values from values.yaml. You can have other fields like README or license files.
@@ -35,18 +41,25 @@ The code deploys a resource group and an AKS cluster. (If you wish to start from
 
 Once the AKS cluster is deployed from terraform, make sure it is in a running state and click the “Connect” button.  
 
+![image](https://user-images.githubusercontent.com/89024359/187981741-ef4d4a6c-dc3b-4fe0-aad1-7c695d6c160a.png)
+
 A window will pop up asking to connect to the cluster through CLI. Click on the CLI icon on the top task bar which will open up the cloud shell.
 
 Copy and paste the first two commands into the cmd:
 - az account set --subscription ffab6f86-113f-4f75-97ca-ea48ce0fede5
 - az aks get-credentials --resource-group AZ-MDSOTA-D-JUPYTER-01 --name AZ-MDSOTA-JUPYTER-AKS-01
  
+![image](https://user-images.githubusercontent.com/89024359/187981897-0acdbc0a-a451-46fb-9f9d-e4d774046819.png)
+
 
 You are now connected to the cluster. First execute the following to list all deployments in all namespaces in the cluster:
 
 kubectl get deployments --all-namespaces=true
 
 >You can think of Namespaces as Folders within Windows Explorer. They provide a logical separation between different services. Usually you would want to create different namespaces for different environments: one for Prod and Staging. For this example, we just used "jupyter" as you will see in step 4.
+	
+![image](https://user-images.githubusercontent.com/89024359/187982090-62788c26-9b46-4902-be16-fe7c4b94baac.png)
+
 
 
 <h4>Step 3: Create config.yaml</h4>
