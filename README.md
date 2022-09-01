@@ -2,8 +2,6 @@
 
 JupyterHub is open source and creates a space for groups to collaborate on notebooks. It is customizable, flexible, scalable, and portable, used for Jupyter Notebook, Jupyter Lab, RStudio, nteract and more. It can be deployed on Kubernetes using Docker allowing it to be scaled and maintained. 
 
-![Picture2](uploads/64e165f986661795a42af0b79699f40c/Picture2.png)
-
 <h2>What is HELM?</h2>
 
 HELM is a package manager for Kubernetes. Instead of having a bunch of yaml files for a service or application you want to deploy into Kubernetes (like ConfigMap, secret, services, K8s User with permissions, etc), Helm compiles all of these files into one which is called a Helm Chart. You can create a Helm Chart and push it to a repository for other Developers to use, or you can download and use exiting ones. Database and Monitoring Apps all have configurations developers have already made. You can view these charts by using command line “help search <keyword>" or searching on Helm Hub. There are also private registries to share in organizations.
@@ -122,8 +120,6 @@ Run the helm-upgrade command listed in step 6. After the upgrade is completed, y
 <h4>Configuring Users</h4>
 
 You can configure users many different ways, even through authenticating through GitLab. But for this example, we are just going to a very simple admin and allowed_users configuration. Enter the following into your yaml.config file and the helm-upgrade command after.
-
-![Picture21](uploads/175c21c3650ae6f9b07f2441212265a7/Picture21.PNG)
 
 Now you will only be able to login to your JupyterHub with a username and password listed above. You will no longer be able to access it by entering any set of charaters for the username/password into JupyterHub.
 
