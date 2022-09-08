@@ -4,7 +4,7 @@ JupyterHub is open source and creates a space for groups to collaborate on noteb
 
 <h2>What is HELM?</h2>
 
-HELM is a package manager for Kubernetes. Instead of having a bunch of yaml files for a service or application you want to deploy into Kubernetes (like ConfigMap, secret, services, K8s User with permissions, etc), Helm compiles all of these files into one which is called a Helm Chart. You can create a Helm Chart and push it to a repository for other Developers to use, or you can download and use exiting ones. Database and Monitoring Apps all have configurations developers have already made. You can view these charts by using command line “help search <keyword>" or searching on Helm Hub. There are also private registries to share in organizations.
+HELM is a package manager for Kubernetes. Instead of having a bunch of yaml files for a service or application you want to deploy into Kubernetes (like ConfigMap, secret, services, K8s User with permissions, etc), Helm compiles all of these files into one which is called a Helm Chart. You can create a Helm Chart and push it to a repository for other Developers to use, or you can download and use exiting ones. Database and Monitoring Apps all have configurations developers have already made. You can view these charts by using command line “help search 'keyword' " or searching on Helm Hub. There are also private registries to share in organizations.
 
 It is also a templating Engine, meaning it can be used for multiple pods that have almost the same yaml config and use dynamic replacement of values.
 
@@ -18,6 +18,21 @@ Helm Chart Structure:
 
 What does this mean!?
 When you execute “helm install 'chartname' ” the template files will be filled with the values from values.yaml. You can have other fields like README or license files.
+____
+<h2>What is JupyterHub?</h2>
+
+- [Visual Studio Code](https://code.visualstudio.com/) for Desktop installed on your machine
+- Azure Cloud Subscription - [AIS MPN VS Enterprise Sub](https://appliedis.sharepoint.com/sites/Developers1/SitePages/aisU-Labs--Initial-Access.aspx)
+- Connect VSCode with Azure Sub
+  - Open VScode and a new terminal, run the following commands
+    - az cloud set --name AzureCloud
+    - az account set --subscription 'subscription ID'
+      - the correct subscription ID will be under the name "VIsual Stuido Enterprise Subscirption" from the previous command
+- Clone Git repo
+  - In the terminal run git clone https://github.com/ChristinaLanaski/JupyterHub.git
+  - Then select "File" "Open File..." on the top task bar and C:\Users\your_name (or where ever you store your git repos), look for a "Jupyterhub" folder. Open the folder and you will have this repo in your VSCode. 
+
+
 
 ______
 
@@ -25,11 +40,28 @@ ______
 
 > Here is the official documentation from Jupyter on how to create your own [JupyterHub](https://zero-to-jupyterhub.readthedocs.io/en/latest/)
 
-<h4> Step One: Create the AKS Service <h4>
+<h4>Step One: Create the AKS Service<h4>
 
-The terraform for a basic AKS Service is already made in the "jupyter" folder. This is a very basic deployment of AKS and deploys just what is needed. More info on what you can add to this deployment can be viewed [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) in the Terraform Registry.
+<h6 style="font-weight: normal">The terraform for a basic AKS Service is already made in the "JuypterHub" folder. This is a very basic deployment of AKS and deploys just what is needed. More info on what you can add to this deployment can be viewed [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) in the Terraform Registry.
 
 The code deploys a resource group and an AKS cluster. (If you wish to start from scratch, the JupyterHub documentation above takes you through a walkthrough on how to deploy an AKS cluster through the portal using CLI)
+
+Run through the following steps to deploy the code:
+
+1. Open a bash terminal
+2. cd into the vars folder (cd ./vars)
+3. run **source kubernetes.d.sh**
+   1. this stores the enviornment variables. run **env** to ensure the variables are stored
+4. cd into the kubernetes folder (cd ../Kubernetes)
+5. run **terraform init**
+6. run **terraform plan**
+   1. A kubernetes cluster and resource group will be created
+7. run **terraform apply**, then **yes** at the prompt.
+8. Double check in the portal that everything deployed correctly:<h1>
+
+![Resources_In_Azure](images\JuypterHubRG.PNG)
+
+```Kubernetes can rack up in costs so make sure you either stop them or destroy them when they are not being used.```
 
 <h4>Step 2:Connect to the AKS Service</h4>
 
@@ -71,7 +103,7 @@ kubetl create namespace <name-of-namespace>
 
 <h4>Step 5: Install HELM and HELM Repo for JupyterHub<h4>
 
-Execute the following commands to install Helm
+<h6 style="font-weight: normal">Execute the following commands to install Helm
 - curl https://raw.githubusercontent.com/helm/helm/HEAD/scripts/get-helm-3 | bash
 - verify installation: run command “helm version”
 
@@ -84,7 +116,7 @@ You should get “….Happy Helming!” message back:
 
 <h4>Step 6: Install the JupyterHub HELM Chart onto your config file<h4>
 
-Now that you have an AKS Service, helm and the JupyterHub repo installed, a namespace for the cluster and the config.yaml file created, the last thing that needs to be done is installing the JupyterHub helm chart onto your cofnig.yaml file. This is done by executing the following command:
+<h6 style="font-weight: normal">Now that you have an AKS Service, helm and the JupyterHub repo installed, a namespace for the cluster and the config.yaml file created, the last thing that needs to be done is installing the JupyterHub helm chart onto your cofnig.yaml file. This is done by executing the following command:
 
 	helm upgrade --cleanup-on-fail \ --install <helm-release-name> jupyterhub/jupyterhub \ --namespace <k8s-namespace> \ --create-namespace \ --version=<chart-version> \ --values config.yaml
 
@@ -103,7 +135,7 @@ In order to actually access your JuypterHub, execute "kubectl --namespace=jupyte
 
 And there you have it! You created your very own JupyterHub! A couple things to note is...
 - JupyterHub is initially over an unsecured HTTP connection. There are instructions below on how to make it secure. It is HIGHLY recommened to do this as soon as you are able to get your Hub up and running....or even put it in your config.yaml file before initial deployment
-- There is no set username or password to actually get into the Hub. You can fill out anything for the username and password and you will be able to access the Hub. Configuration of this is instructed below.
+- There is no set username or password to actually get into the Hub. You can fill out anything for the username and password and you will be able to access the Hub. Configuration of this is instructed below.<h1>
 
 ------
 <h2>Configuration of JupyterHub</h2>
@@ -125,10 +157,10 @@ Now you will only be able to login to your JupyterHub with a username and passwo
 
 <h4>Customizing the UI<h4>
 
-Just like everything else, there are a LOT of different ways to customize your UI. Jupyter works with Docker Images to pull specific images for different use cases. You can view this repository [here](https://github.com/jupyter/docker-stacks/) and [which images to use](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html).  The jupyter/datascience-notebook image is used in this example which comes with Python, R, Julia, a terminal, Markdown, and more. Enter the following into your config.yaml file and run the helm-upgrade command:
+<h6 style="font-weight: normal">Just like everything else, there are a LOT of different ways to customize your UI. Jupyter works with Docker Images to pull specific images for different use cases. You can view this repository [here](https://github.com/jupyter/docker-stacks/) and [which images to use](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html).  The jupyter/datascience-notebook image is used in this example which comes with Python, R, Julia, a terminal, Markdown, and more. Enter the following into your config.yaml file and run the helm-upgrade command:
 
  >Note: The comments do not NEED to be in the config, but good to have them for later reference
 
 This is will take a couple of minutes to update, but once it does, browse to your JupyterHub and you will see a new UI once you login:
 
-With all these configurations, this is what the final config.yaml file looks like:
+With all these configurations, this is what the final config.yaml file looks like:<h1>
