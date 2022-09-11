@@ -46,16 +46,16 @@ ______
 
 > Here is the official documentation from Jupyter on how to create your own [JupyterHub](https://zero-to-jupyterhub.readthedocs.io/en/latest/)
 
-<h4>Step One: Create the AKS Service<h4>
+<h4>Step One: Create the AKS Service</h4>
 
-<h6 style="font-weight: normal">The terraform for a basic AKS Service is already made in the "JuypterHub" folder. This is a very basic deployment of AKS and deploys just what is needed. More info on what you can add to this deployment can be viewed [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) in the Terraform Registry.
+The terraform for a basic AKS Service is already made in the "JuypterHub" folder. This is a very basic deployment of AKS and deploys just what is needed. More info on what you can add to this deployment can be viewed [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) in the Terraform Registry.
 
 The code deploys a resource group and an AKS cluster. The AKS cluster is what will be used to make configurations and host the site. (If you wish to start from scratch, the JupyterHub documentation above takes you through a walkthrough on how to deploy an AKS cluster through the portal using CLI)
 
-Run through the following steps to deploy the code:<h1>
+Run through the following steps to deploy the code:
 
 
-</h6>
+
 ```bash
 1. Open a bash terminal
 2. cd into the vars folder (cd ./vars)
@@ -68,12 +68,11 @@ Run through the following steps to deploy the code:<h1>
 7. run **terraform apply**, then **yes** at the prompt.
 8. Double check in the portal that everything deployed correctly
 ```
-<h6>
 
 
 ![Resources_In_Azure](images\JuypterHubRG.PNG)
 
-*</h6>Kubernetes can rack up in costs so make sure you either stop them or destroy them when they are not being used.<h6>*
+*Kubernetes can rack up in costs so make sure you either stop them or destroy them when they are not being used.*
 
 <h4>Step 2:Connect to the AKS Service</h4>
 
@@ -94,9 +93,9 @@ Copy and paste the first two commands into the cmd:
  
 ![image](https://user-images.githubusercontent.com/89024359/187981897-0acdbc0a-a451-46fb-9f9d-e4d774046819.png)
 
-<h4>Step 3: Install HELM and HELM Repo for JupyterHub<h4>
+<h4>Step 3: Install HELM and HELM Repo for JupyterHub</h4>
 
-</h6>Execute the following command to install Helm:<h6>
+Execute the following command to install Helm:
 
 Install HELM:
 ```bash
@@ -185,9 +184,9 @@ Verify you saved the contents inside the file by running "cat config.yaml":
 ![initalyamlcomment.PNG](images\initalyamlcomment.PNG)
 
 
-<h4>Step 6: Install the JupyterHub HELM Chart onto your config file<h4>
+<h4>Step 6: Install the JupyterHub HELM Chart onto your config file</h4>
 
-</h6> style="font-weight: normal">Now that you have an AKS Service, helm and the JupyterHub repo installed, a namespace for the cluster and the config.yaml file created, the last thing that needs to be done is installing the JupyterHub helm chart onto your cofnig.yaml file. This is done by executing the following command:<h6>
+Now that you have an AKS Service, helm and the JupyterHub repo installed, a namespace for the cluster and the config.yaml file created, the last thing that needs to be done is installing the JupyterHub helm chart onto your cofnig.yaml file. This is done by executing the following command:
 ```bash
 helm upgrade --cleanup-on-fail \
   --install <helm-release-name> jupyterhub/jupyterhub \
@@ -209,16 +208,17 @@ Once the update is completed, you will get the following message:
 
 Once you recieve that message, make sure your hub and proxy are ready and running:
 
-
->kubectl --namespace=jupyterhub get pod
+```bash
+kubectl --namespace=jupyterhub get pod
+```
 
 ![HUB.PNG](images/HUB.PNG)
 
 In order to actually access your JuypterHub, execute 
 
-
->kubectl --namespace=jupyterhub get svc proxy-public
-
+```bash
+kubectl --namespace=jupyterhub get svc proxy-public
+```
 
 Copy and past the EXTERNAL-IP into the bowser and it will take you to the login of your JupyterHub! :)
 
@@ -227,7 +227,7 @@ Copy and past the EXTERNAL-IP into the bowser and it will take you to the login 
 
 And there you have it! You created your very own JupyterHub! A couple things to note is...
 - JupyterHub is initially over an unsecured HTTP connection. There are instructions below on how to make it secure. It is HIGHLY recommened to do this as soon as you are able to get your Hub up and running....or even put it in your config.yaml file before initial deployment
-- There is no set username or password to actually get into the Hub. You can fill out anything for the username and password and you will be able to access the Hub. Configuration of this is instructed below.<h1>
+- There is no set username or password to actually get into the Hub. You can fill out anything for the username and password and you will be able to access the Hub. Configuration of this is instructed below.
 
 ------
 <h2>Configuration of JupyterHub</h2>
@@ -235,9 +235,9 @@ And there you have it! You created your very own JupyterHub! A couple things to 
 >This is only walking through very basic configuration of JupyterHub. There are MANY different ways you can configure your Hub to fit your needs. You can find all this info [here](https://zero-to-jupyterhub.readthedocs.io/en/latest/jupyterhub/customization.html)
 
 In order to create a secure site, you will need to create an A Record for your JupyterHub. Follow [Microsofts instructions](https://docs.microsoft.com/en-us/azure/dns/dns-getstarted-portal) to create one. The IP address will be the EXTERNAL IP. To find it, run:
-
->kubectl --namespace=jupyterhub get svc proxy-public
-
+```bash
+kubectl --namespace=jupyterhub get svc proxy-public
+```
 
 Once the DNS record is created, open your config.yaml file within your namespace and input the following:
 ```bash
