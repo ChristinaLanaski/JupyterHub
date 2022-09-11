@@ -25,7 +25,7 @@ Helm Chart Structure:
 What does this mean!?
 When you execute “helm install 'chartname' ” the template files will be filled with the values from values.yaml. You can have other fields like README or license files.
 ____
-<h2>Prerequisits</h2>
+<h2>Prerequisites</h2>
 
 - [Visual Studio Code](https://code.visualstudio.com/) for Desktop installed on your machine
 - Azure Cloud Subscription - [AIS MPN VS Enterprise Sub](https://appliedis.sharepoint.com/sites/Developers1/SitePages/aisU-Labs--Initial-Access.aspx)
@@ -50,9 +50,11 @@ ______
 
 <h6 style="font-weight: normal">The terraform for a basic AKS Service is already made in the "JuypterHub" folder. This is a very basic deployment of AKS and deploys just what is needed. More info on what you can add to this deployment can be viewed [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) in the Terraform Registry.
 
-The code deploys a resource group, an AKS cluster and an Azure Container Registry with a service principal. The AKS cluster is what will be used to make configurations and host the site. (If you wish to start from scratch, the JupyterHub documentation above takes you through a walkthrough on how to deploy an AKS cluster through the portal using CLI)
+The code deploys a resource group and an AKS cluster. The AKS cluster is what will be used to make configurations and host the site. (If you wish to start from scratch, the JupyterHub documentation above takes you through a walkthrough on how to deploy an AKS cluster through the portal using CLI)
 
 Run through the following steps to deploy the code:<h1>
+
+
 </h6>
 ```bash
 1. Open a bash terminal
@@ -67,6 +69,7 @@ Run through the following steps to deploy the code:<h1>
 8. Double check in the portal that everything deployed correctly
 ```
 <h6>
+
 
 ![Resources_In_Azure](images\JuypterHubRG.PNG)
 
@@ -184,7 +187,7 @@ Verify you saved the contents inside the file by running "cat config.yaml":
 
 <h4>Step 6: Install the JupyterHub HELM Chart onto your config file<h4>
 
-<h6 style="font-weight: normal">Now that you have an AKS Service, helm and the JupyterHub repo installed, a namespace for the cluster and the config.yaml file created, the last thing that needs to be done is installing the JupyterHub helm chart onto your cofnig.yaml file. This is done by executing the following command:
+</h6> style="font-weight: normal">Now that you have an AKS Service, helm and the JupyterHub repo installed, a namespace for the cluster and the config.yaml file created, the last thing that needs to be done is installing the JupyterHub helm chart onto your cofnig.yaml file. This is done by executing the following command:<h6>
 ```bash
 helm upgrade --cleanup-on-fail \
   --install <helm-release-name> jupyterhub/jupyterhub \
@@ -192,7 +195,7 @@ helm upgrade --cleanup-on-fail \
   --create-namespace \
   --version=<chart-version> \
   --values config.yaml
-  ```
+```
 
 - Helm-release-name: The [Helm Release Name](https://helm.sh/docs/glossary/#release) is the name of the instance that the chart will be installed on. You will need it when you are changing or deleteling the configuration of chart installation. There is no standardize naming convention, but use something that makes sense. For me, I used “jupyterhubv1.0"
 - K8s-namespace: kubernetes namespace you created in step 6.
@@ -202,9 +205,24 @@ helm upgrade --cleanup-on-fail \
 
 Once the update is completed, you will get the following message:
 
-Once you recieve that message, make sure your hub and proxy are ready and running "kubectl --namespace=jupyterhub get pod"
+![JHHelmCHartInstall.PNG](images/JHHelmChartInstall.PNG)
 
-In order to actually access your JuypterHub, execute "kubectl --namespace=jupyterhub get svc proxy-public". Copy and past the EXTERNAL-IP into the bowser and it will take you to the login of your JupyterHub! :)
+Once you recieve that message, make sure your hub and proxy are ready and running:
+
+
+>kubectl --namespace=jupyterhub get pod
+
+![HUB.PNG](images/HUB.PNG)
+
+In order to actually access your JuypterHub, execute 
+
+
+>kubectl --namespace=jupyterhub get svc proxy-public
+
+
+Copy and past the EXTERNAL-IP into the bowser and it will take you to the login of your JupyterHub! :)
+
+![externalip.PNG](images/externalip.PNG)
 
 
 And there you have it! You created your very own JupyterHub! A couple things to note is...
@@ -214,30 +232,85 @@ And there you have it! You created your very own JupyterHub! A couple things to 
 ------
 <h2>Configuration of JupyterHub</h2>
 
->This is only walking through very basic configuration of JupyterHub. There are MANY different ways you can configure your Hub to the ways you need to use it. You can find all this info [here](https://zero-to-jupyterhub.readthedocs.io/en/latest/jupyterhub/customization.html)
+>This is only walking through very basic configuration of JupyterHub. There are MANY different ways you can configure your Hub to fit your needs. You can find all this info [here](https://zero-to-jupyterhub.readthedocs.io/en/latest/jupyterhub/customization.html)
 
-In order to create a secure site, you will need to create an A Record for your JupyterHub. Follow Microsofts instructions [here](https://docs.microsoft.com/en-us/azure/dns/dns-getstarted-portal) to create one. The IP address will be the EXTERNAL IP (run "kubectl --namespace=jupyterhub get svc proxy-public" in your AKS service to find it).
+In order to create a secure site, you will need to create an A Record for your JupyterHub. Follow [Microsofts instructions](https://docs.microsoft.com/en-us/azure/dns/dns-getstarted-portal) to create one. The IP address will be the EXTERNAL IP. To find it, run:
+
+>kubectl --namespace=jupyterhub get svc proxy-public
+
 
 Once the DNS record is created, open your config.yaml file within your namespace and input the following:
+```bash
+proxy:
+  https:
+    enabled: true
+    hosts:
+      - <your-domain-name>
+    letsencrypt:
+      contactEmail: <your-email-address>
+```
+*NOTE: this method is using letsencrypt which is a nonprofit CA provider TLS certificates. It works well for this demo but make sure to use the best method listed in the Project Juypter docs for your use case*
 
 
-Run the helm-upgrade command listed in step 6. After the upgrade is completed, you should now be able to browse to https://<DOMAIN_NAME>.com and not http://<EXTERNAL_IP>.
+Run the helm-upgrade command listed in step 6 to apply the changes to your site:
+```bash
+helm upgrade --cleanup-on-fail \
+  --install <helm-release-name> jupyterhub/jupyterhub \
+  --namespace <k8s-namespace> \
+  --create-namespace \
+  --version=<chart-version> \
+  --values config.yaml
+```
+ After the upgrade is completed, you should now be able to browse to https://<DOMAIN_NAME>.com and not http://<EXTERNAL_IP>.
 
 <h4>Configuring Users</h4>
 
-You can configure users many different ways, even through authenticating through GitLab. But for this example, we are just going to a very simple admin and allowed_users configuration. Enter the following into your yaml.config file and the helm-upgrade command after.
+You can configure users many different ways, even through authenticating through GitLab. But for this example, we are just going to a very simple admin and allowed_users configuration. Enter the following into your config.yaml file and the helm-upgrade command after:
+```bash
+hub:
+  config:
+    Authenticator:
+      admin_users:
+        - user1
+        - user2
+      allowed_users:
+        - user3
+        - user4
+    # ...
+    DummyAuthenticator:
+      password: a-shared-secret-password
+    JupyterHub:
+      authenticator_class: dummy
+```
 
 Now you will only be able to login to your JupyterHub with a username and password listed above. You will no longer be able to access it by entering any set of charaters for the username/password into JupyterHub.
 
-<h4>Customizing the UI<h4>
+<h4>Customizing the UI</h4>
 
-<h6 style="font-weight: normal">Just like everything else, there are a LOT of different ways to customize your UI. Jupyter works with Docker Images to pull specific images for different use cases. You can view this repository [here](https://github.com/jupyter/docker-stacks/) and [which images to use](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html).  The jupyter/datascience-notebook image is used in this example which comes with Python, R, Julia, a terminal, Markdown, and more. Enter the following into your config.yaml file and run the helm-upgrade command:
+Just like everything else, there are a LOT of different ways to customize your UI. Jupyter works with Docker Images to pull specific images for different use cases. You can view this repository [here](https://github.com/jupyter/docker-stacks/) and [which images to use](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html).  The jupyter/datascience-notebook image is used in this example which comes with Python, R, Julia, a terminal, Markdown, and more. Enter the following into your config.yaml file and run the helm-upgrade command:
+```bash
+singleuser:
+  image:
+    # You should replace the "latest" tag with a fixed version from:
+    # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
+    # Inspect the Dockerfile at:
+    # https://github.com/jupyter/docker-stacks/tree/HEAD/datascience-notebook/Dockerfile
+    name: jupyter/datascience-notebook
+    tag: latest
+  # `cmd: null` allows the custom CMD of the Jupyter docker-stacks to be used
+  # which performs further customization on startup.
+  cmd: null
+  ```
 
- >Note: The comments do not NEED to be in the config, but good to have them for later reference
+*Note: The comments do not NEED to be in the config, but good to have them for later reference*
 
 This is will take a couple of minutes to update, but once it does, browse to your JupyterHub and you will see a new UI once you login:
 
-With all these configurations, this is what the final config.yaml file looks like:<h1>
+![ConfiguredUI.PNG](images/ConfiguredUI.PNG)
+
+With all these configurations, this is what the final config.yaml file looks like:
+
+![configend.PNG](images/configend.PNG)
 
 
 acr: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli
