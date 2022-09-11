@@ -25,7 +25,7 @@ Helm Chart Structure:
 What does this mean!?
 When you execute “helm install 'chartname' ” the template files will be filled with the values from values.yaml. You can have other fields like README or license files.
 ____
-<h2>What is JupyterHub?</h2>
+<h2>Prerequisits</h2>
 
 - [Visual Studio Code](https://code.visualstudio.com/) for Desktop installed on your machine
 - Azure Cloud Subscription - [AIS MPN VS Enterprise Sub](https://appliedis.sharepoint.com/sites/Developers1/SitePages/aisU-Labs--Initial-Access.aspx)
@@ -50,10 +50,11 @@ ______
 
 <h6 style="font-weight: normal">The terraform for a basic AKS Service is already made in the "JuypterHub" folder. This is a very basic deployment of AKS and deploys just what is needed. More info on what you can add to this deployment can be viewed [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) in the Terraform Registry.
 
-The code deploys a resource group and an AKS cluster. (If you wish to start from scratch, the JupyterHub documentation above takes you through a walkthrough on how to deploy an AKS cluster through the portal using CLI)
+The code deploys a resource group, an AKS cluster and an Azure Container Registry with a service principal. The AKS cluster is what will be used to make configurations and host the site. (If you wish to start from scratch, the JupyterHub documentation above takes you through a walkthrough on how to deploy an AKS cluster through the portal using CLI)
 
-Run through the following steps to deploy the code:
-
+Run through the following steps to deploy the code:<h1>
+</h6>
+```bash
 1. Open a bash terminal
 2. cd into the vars folder (cd ./vars)
 3. run **source kubernetes.d.sh**
@@ -63,11 +64,13 @@ Run through the following steps to deploy the code:
 6. run **terraform plan**
    1. A kubernetes cluster and resource group will be created
 7. run **terraform apply**, then **yes** at the prompt.
-8. Double check in the portal that everything deployed correctly:<h1>
+8. Double check in the portal that everything deployed correctly
+```
+<h6>
 
 ![Resources_In_Azure](images\JuypterHubRG.PNG)
 
-```Kubernetes can rack up in costs so make sure you either stop them or destroy them when they are not being used.```
+*</h6>Kubernetes can rack up in costs so make sure you either stop them or destroy them when they are not being used.<h6>*
 
 <h4>Step 2:Connect to the AKS Service</h4>
 
@@ -75,63 +78,121 @@ Once the AKS cluster is deployed from terraform, make sure it is in a running st
 
 ![image](https://user-images.githubusercontent.com/89024359/187981741-ef4d4a6c-dc3b-4fe0-aad1-7c695d6c160a.png)
 
-A window will pop up asking to connect to the cluster through CLI. Click on the CLI icon on the top task bar which will open up the cloud shell.
+A window will pop up asking to connect to the cluster through CLI. Click on the CLI icon on the top task bar which will open up the cloud shell:
+
+![image](images\cliconnect.PNG)
 
 Copy and paste the first two commands into the cmd:
-- az account set --subscription ffab6f86-113f-4f75-97ca-ea48ce0fede5
+
+```bash
+- az account set --subscription subscription id
 - az aks get-credentials --resource-group AZ-MDSOTA-D-JUPYTER-01 --name AZ-MDSOTA-JUPYTER-AKS-01
+```
  
 ![image](https://user-images.githubusercontent.com/89024359/187981897-0acdbc0a-a451-46fb-9f9d-e4d774046819.png)
 
+<h4>Step 3: Install HELM and HELM Repo for JupyterHub<h4>
 
-You are now connected to the cluster. First execute the following to list all deployments in all namespaces in the cluster:
+</h6>Execute the following command to install Helm:<h6>
 
-kubectl get deployments --all-namespaces=true
+Install HELM:
+```bash
+- curl https://raw.githubusercontent.com/helm/helm/HEAD/scripts/get-helm-3 | bash
+```
+to verify installation, execute:
+```bash
+ helm version
+```
 
->You can think of Namespaces as Folders within Windows Explorer. They provide a logical separation between different services. Usually you would want to create different namespaces for different environments: one for Prod and Staging. For this example, we just used "jupyter" as you will see in step 4.
-	
-![image](https://user-images.githubusercontent.com/89024359/187982090-62788c26-9b46-4902-be16-fe7c4b94baac.png)
+Now that you have Helm installed, you can pull the latest Helm repo for Juypter:
+```bash
+- helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+- helm repo update
+```
+You should get “….Happy Helming!” message back:
 
-
-
-<h4>Step 3: Create config.yaml</h4>
-
-First create a directory where the config.yaml file will live with the "mkdir <directory-name>" command. CD into that directory and make the config.yaml file with "touch config.yaml". Ensure the file is there by executing "ls":
-
-
-This is the file that will hold all the configurations for your JuypterHub. For now, put some comments in the file (JupyterHub may not run if nothing is in the config.yaml file). You can modify the file contents by running "vim config.yaml".
-- to modify the contents of the file, press "i" on the keyboard
-- once done, press "esc" then shift+: wq!, enter
-
-
-Verify you saved the contents inside the file by running "cat config.yaml"
-
+![HelmInstall.png](images\HelmInstall.PNG)
 
 <h4>Step 4: Create the Namespace</h4>
 
+First execute the following to list all deployments in all namespaces in the cluster:
+
+```bash
+kubectl get namespaces
+```
+
+You can think of Namespaces as Folders within Windows Explorer. They provide a logical separation between different services. Usually you would want to create different namespaces for different environments: one for Prod and Staging. For this example, we just used "dev".
+
 Create the namespace by executing the following command:
 
-kubetl create namespace <name-of-namespace>
+```bash
+kubectl create namespace <name-of-namespace>
+```
+![namespacecreate.PNG](images\namespacecreate.PNG)
+
+Then execute the following to verify that the namesapce was created:
+
+```bash
+kubectl get namespaces
+```
 
 
-<h4>Step 5: Install HELM and HELM Repo for JupyterHub<h4>
-
-<h6 style="font-weight: normal">Execute the following commands to install Helm
-- curl https://raw.githubusercontent.com/helm/helm/HEAD/scripts/get-helm-3 | bash
-- verify installation: run command “helm version”
+![namespacecreate.PNG](images\namespacecreate.PNG)
+![devnamespace.png](images\devnamespace.PNG)
 
 
-Now that you have Helm installed, you can pull the latest Helm repo for Juypter:
-- “helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/”
-- “helm repo update”
-You should get “….Happy Helming!” message back:
+<h4>Step 5: Create config.yaml</h4>
+
+First create a directory where the config.yaml file will be stored:
+```bash
+mkdir <directory-name>
+```
+CD into that directory and make the config.yaml file with:
+```bash
+touch config.yaml
+```
+Ensure the file is there by executing "ls":
+
+![step3.PNG](images\step3.PNG)
+
+
+This is the file that will hold all the configurations for your JuypterHub. For now, put some comments in the file (JupyterHub may not run if nothing is in the config.yaml file). You can modify the file contents by running:
+```bash
+vim config.yaml
+```
+To modify the contents of the file, press "i" on the keyboard. Then paste:
+```bash
+# This file can update the JupyterHub Helm chart's default configuration values.
+#
+# For reference see the configuration reference and default values, but make
+# sure to refer to the Helm chart version of interest to you!
+#
+# Introduction to YAML:     https://www.youtube.com/watch?v=cdLNKUoMc6c
+# Chart config reference:   https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html
+# Chart default values:     https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/HEAD/jupyterhub/values.yaml
+# Available chart versions: https://jupyterhub.github.io/helm-chart/
+#
+```
+
+- once done, press "esc" then shift+: wq!, enter
+
+
+Verify you saved the contents inside the file by running "cat config.yaml":
+
+![initalyamlcomment.PNG](images\initalyamlcomment.PNG)
 
 
 <h4>Step 6: Install the JupyterHub HELM Chart onto your config file<h4>
 
 <h6 style="font-weight: normal">Now that you have an AKS Service, helm and the JupyterHub repo installed, a namespace for the cluster and the config.yaml file created, the last thing that needs to be done is installing the JupyterHub helm chart onto your cofnig.yaml file. This is done by executing the following command:
-
-	helm upgrade --cleanup-on-fail \ --install <helm-release-name> jupyterhub/jupyterhub \ --namespace <k8s-namespace> \ --create-namespace \ --version=<chart-version> \ --values config.yaml
+```bash
+helm upgrade --cleanup-on-fail \
+  --install <helm-release-name> jupyterhub/jupyterhub \
+  --namespace <k8s-namespace> \
+  --create-namespace \
+  --version=<chart-version> \
+  --values config.yaml
+  ```
 
 - Helm-release-name: The [Helm Release Name](https://helm.sh/docs/glossary/#release) is the name of the instance that the chart will be installed on. You will need it when you are changing or deleteling the configuration of chart installation. There is no standardize naming convention, but use something that makes sense. For me, I used “jupyterhubv1.0"
 - K8s-namespace: kubernetes namespace you created in step 6.
@@ -177,3 +238,10 @@ Now you will only be able to login to your JupyterHub with a username and passwo
 This is will take a couple of minutes to update, but once it does, browse to your JupyterHub and you will see a new UI once you login:
 
 With all these configurations, this is what the final config.yaml file looks like:<h1>
+
+
+acr: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli
+
+heml with acr: https://docs.microsoft.com/en-us/cli/azure/acr/helm?view=azure-cli-latest
+
+helmv3: https://www.visualstudiogeeks.com/devops/helm/deploying-helm-chart-with-azdo#:~:text=Installing%20Helm%203%20on%20the%20agent%20Login%20to,chart%201.%20Installing%20Helm%203%20on%20the%20agent

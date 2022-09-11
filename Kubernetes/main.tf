@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "jupyter" {
-  name = var.jupyter_rgp
+  name     = var.jupyter_rgp
   location = var.location
 }
 resource "azurerm_kubernetes_cluster" "jupyter" {
@@ -17,6 +17,7 @@ resource "azurerm_kubernetes_cluster" "jupyter" {
   identity {
     type = "SystemAssigned"
   }
+
 
   tags = {
     Environment = "Production"
