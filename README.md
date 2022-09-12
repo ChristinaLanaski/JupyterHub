@@ -46,6 +46,8 @@ ______
 
 > Here is the official documentation from Jupyter on how to create your own [JupyterHub](https://zero-to-jupyterhub.readthedocs.io/en/latest/)
 
+> If using your MPN Enterprise account, it may be easier to go through the command line with these steps [here](https://zero-to-jupyterhub.readthedocs.io/en/stable/kubernetes/microsoft/step-zero-azure.html)
+
 <h4>Step One: Create the AKS Service</h4>
 
 The terraform for a basic AKS Service is already made in the "JuypterHub" folder. This is a very basic deployment of AKS and deploys just what is needed. More info on what you can add to this deployment can be viewed [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) in the Terraform Registry.
@@ -139,7 +141,7 @@ kubectl get namespaces
 ```
 
 
-![namespacecreate.PNG](images\namespacecreate.PNG)
+[namespacecreate.PNG](images\namespacecreate.PNG)
 ![devnamespace.png](images\devnamespace.PNG)
 
 
@@ -312,9 +314,7 @@ With all these configurations, this is what the final config.yaml file looks lik
 
 ![configend.PNG](images/configend.PNG)
 
+#### Useful Links ###
+[Using ACR with AKS](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli)
 
-acr: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli
-
-heml with acr: https://docs.microsoft.com/en-us/cli/azure/acr/helm?view=azure-cli-latest
-
-helmv3: https://www.visualstudiogeeks.com/devops/helm/deploying-helm-chart-with-azdo#:~:text=Installing%20Helm%203%20on%20the%20agent%20Login%20to,chart%201.%20Installing%20Helm%203%20on%20the%20agent
+[HELM CLI Commands](https://docs.microsoft.com/en-us/cli/azure/acr/helm?view=azure-cli-latest)
