@@ -13,7 +13,7 @@ variables:
   dockerRegistryServiceConnection: 'b8efe1e3-57e1-4999-9a73-2bd1fc89d580'
   imageRepository: 'jupyterhubdocker'
   containerRegistry: 'juypyerhubacr.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
+  dockerfilePath: '.devcontainer/Dockerfile'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
