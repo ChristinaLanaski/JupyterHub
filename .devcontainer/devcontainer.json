@@ -1,0 +1,49 @@
+{
+"name": "C# (.NET)",
+	"build": {
+		"dockerfile": "Dockerfile",
+	},
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"workbench.colorTheme": "Atom One Dark",
+		"workbench.iconTheme": "vscode-icons",
+	},
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ms-dotnettools.csharp",
+		"rogalmic.bash-debug",
+		"mads-hartmann.bash-ide-vscode",
+		"timonwong.shellcheck",
+		"jeff-hykin.better-shellscript-syntax",
+		"formulahendry.code-runner",
+		"eamodio.gitlens",
+		"streetsidesoftware.code-spell-checker",
+		"yzhang.markdown-all-in-one",
+		"visualstudioexptteam.vscodeintellicode",
+		"ms-azuretools.vscode-azureresourcegroups",
+		"ms-azuretools.vscode-docker",
+		"ms-azuretools.vscode-azurefunctions",
+		"ms-azuretools.vscode-azurestorage",
+		"ms-vscode.azure-account",
+		"ms-kubernetes-tools.vscode-kubernetes-tools",
+		"akamud.vscode-theme-onedark",
+		"vscode-icons-team.vscode-icons",
+		"coenraads.bracket-pair-colorizer-2",
+		"mikestead.dotenv",
+		"shardulm94.trailing-spaces",
+		"davidanson.vscode-markdownlint",
+		"formulahendry.dotnet-test-explorer",
+		"semasquare.vscode-coverage-gutters",
+		"bierner.markdown-emoji",
+		"tomoki1207.pdf",
+		"bierner.markdown-mermaid",
+		"editorconfig.editorconf"
+	],
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [5000, 5001],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "bash git_hooks/install_hooks.sh",
+	"features": {
+		"docker-in-docker": "latest",
+	}
+}
