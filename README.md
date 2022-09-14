@@ -135,7 +135,7 @@ Now that you have Helm installed, you can pull the latest Helm repo for Juypter:
 ```
 You should get “….Happy Helming!” message back:
 
-![HelmInstall.png](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/JHHelmChartInstall.PNG)
+![HelmInstall.png](https://github.com/ChristinaLanaski/JupyterHub/blob/b46ea75419ea6ed6d549bcf5fa9c265740dafd54/images/HelmInstall.PNG)
 
 <h4>Step 4: Create the Namespace</h4>
 
@@ -227,7 +227,7 @@ helm upgrade --cleanup-on-fail \
 
 Once the update is completed, you will get the following message:
 
-![images/JHHelmChartInstall.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/HelmInstall.PNG)
+![images/JHHelmChartInstall.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/b46ea75419ea6ed6d549bcf5fa9c265740dafd54/images/JHHelmChartInstall.PNG)
 
 Once you recieve that message, make sure your hub and proxy are ready and running:
 
