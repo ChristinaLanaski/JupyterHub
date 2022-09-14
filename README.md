@@ -89,7 +89,11 @@ In order to avoid any authentication errors and ensure that all required softwar
 
 ![acrrepo](https://github.com/ChristinaLanaski/JupyterHub/blob/84c9b5e4ebdd73befd399e379dffeaccb4eab904/images/acrrepo.PNG)
 
-3. Create AKS
+The end result should look like what is in the [azure-pipelines.yml](azure-pipelines.yml), but in devops:
+
+![devopsyml.PNG](\JupyterHub\images\devopsyaml.PNG)
+
+1. Create AKS
    1. Through the portal, create an AKS and ensure when you get to the "Integrations" tab, for Container registry, you select the one you created in step 1.
 
 <h4>Step 2:Connect to the AKS Service</h4>
