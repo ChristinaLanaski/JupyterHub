@@ -73,7 +73,7 @@ Run through the following steps to deploy the code:
 ```
 Know that the terraform current does not include the ACR used for HELM. If you choose to follow this method without connecting AKS to the ACR registry that has all the required software installed, you will be prompted for a sudo password which is unknown. To avoid this, follow "Azure DevOps to ACR to AKS until" the terraform is updated
 
-![Resources_In_Azure](images\JuypterHubRG.PNG)
+![Resources_In_Azure](images/step3.PNG)
 
 *Kubernetes can rack up in costs so make sure you either stop them or destroy them when they are not being used.*
 
@@ -102,7 +102,7 @@ Once the AKS cluster is deployed from terraform, make sure it is in a running st
 
 A window will pop up asking to connect to the cluster through CLI. Click on the CLI icon on the top task bar which will open up the cloud shell:
 
-![image](images\cliconnect.PNG)
+[image](images\cliconnect.PNG)
 
 Copy and paste the first two commands into the cmd:
 
@@ -133,7 +133,7 @@ Now that you have Helm installed, you can pull the latest Helm repo for Juypter:
 ```
 You should get “….Happy Helming!” message back:
 
-![HelmInstall.png](images\HelmInstall.PNG)
+[HelmInstall.png](images\HelmInstall.PNG)
 
 <h4>Step 4: Create the Namespace</h4>
 
@@ -150,7 +150,7 @@ Create the namespace by executing the following command:
 ```bash
 kubectl create namespace <name-of-namespace>
 ```
-![namespacecreate.PNG](images\namespacecreate.PNG)
+[namespacecreate.PNG](images\namespacecreate.PNG)
 
 Then execute the following to verify that the namesapce was created:
 
@@ -160,7 +160,7 @@ kubectl get namespaces
 
 
 [namespacecreate.PNG](images\namespacecreate.PNG)
-![devnamespace.png](images\devnamespace.PNG)
+[devnamespace.png](images\devnamespace.PNG)
 
 
 <h4>Step 5: Create config.yaml</h4>
@@ -175,7 +175,7 @@ touch config.yaml
 ```
 Ensure the file is there by executing "ls":
 
-![step3.PNG](images\step3.PNG)
+[step3.PNG](images\step3.PNG)
 
 
 This is the file that will hold all the configurations for your JuypterHub. For now, put some comments in the file (JupyterHub may not run if nothing is in the config.yaml file). You can modify the file contents by running:
@@ -201,7 +201,7 @@ To modify the contents of the file, press "i" on the keyboard. Then paste:
 
 Verify you saved the contents inside the file by running "cat config.yaml":
 
-![initalyamlcomment.PNG](images\initalyamlcomment.PNG)
+[initalyamlcomment.PNG](images\initalyamlcomment.PNG)
 
 
 <h4>Step 6: Install the JupyterHub HELM Chart onto your config file</h4>
@@ -224,7 +224,7 @@ helm upgrade --cleanup-on-fail \
 
 Once the update is completed, you will get the following message:
 
-![JHHelmCHartInstall.PNG](images/JHHelmChartInstall.PNG)
+[JHHelmCHartInstall.PNG](images/JHHelmChartInstall.PNG)
 
 Once you recieve that message, make sure your hub and proxy are ready and running:
 
