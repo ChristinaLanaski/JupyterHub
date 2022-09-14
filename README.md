@@ -34,7 +34,7 @@ ____
     - az cloud set --name AzureCloud
     - az account set --subscription 'subscription ID'
       - the correct subscription ID will be under the name "VIsual Stuido Enterprise Subscirption" from the previous command
-- Clone Git repo
+- Clone Git repo/Have a GitHub Account
   - In the terminal run git clone https://github.com/ChristinaLanaski/JupyterHub.git
   - Then select "File" "Open File..." on the top task bar and C:\Users\your_name (or where ever you store your git repos), look for a "Jupyterhub" folder. Open the folder and you will have this repo in your VSCode. 
 
@@ -47,6 +47,7 @@ ______
 > Here is the official documentation from Jupyter on how to create your own [JupyterHub](https://zero-to-jupyterhub.readthedocs.io/en/latest/)
 
 > If using your MPN Enterprise account, it may be easier to go through the command line with these steps [here](https://zero-to-jupyterhub.readthedocs.io/en/stable/kubernetes/microsoft/step-zero-azure.html)
+
 
 <h4>Step One: Create the AKS Service</h4>
 
@@ -62,7 +63,7 @@ Run through the following steps to deploy the code:
 1. Open a bash terminal
 2. cd into the vars folder (cd ./vars)
 3. run **source kubernetes.d.sh**
-   1. this stores the enviornment variables. run **env** to ensure the variables are stored
+   1. this stores the environment variables. run **env** to ensure the variables are stored
 4. cd into the kubernetes folder (cd ../Kubernetes)
 5. run **terraform init**
 6. run **terraform plan**
@@ -70,11 +71,28 @@ Run through the following steps to deploy the code:
 7. run **terraform apply**, then **yes** at the prompt.
 8. Double check in the portal that everything deployed correctly
 ```
-
+Know that the terraform current does not include the ACR used for HELM. If you choose to follow this method without connecting AKS to the ACR registry that has all the required software installed, you will be prompted for a sudo password which is unknown. To avoid this, follow "Azure DevOps to ACR to AKS until" the terraform is updated
 
 ![Resources_In_Azure](images\JuypterHubRG.PNG)
 
 *Kubernetes can rack up in costs so make sure you either stop them or destroy them when they are not being used.*
+
+<h4>Step 1.5: DevOps to ACR to AKS</h4>
+
+In order to avoid any authentication errors and ensure that all required software is installed, you can push a docker container to an ACR registry connected to AKS through Azure Pipelines:
+
+1. Create ACR through the portal, you can leave the defaults
+2. [Create DevOps with Dockerfile and push to ACR](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/containers/acr-template?view=azure-devops)
+   1. Use this JupyterHub repo when pulling from GitHub
+   2. For step 7 in the docs, choose the ACR you created in step 1 above
+   3. For step 8, name it jupyterhubdocker and the file path should be .devcontainer/Dockerfile
+   4. You can copy the code from [azure-pipelines](azure-pipelines.yml)
+  After the pipeline ran successfully, go to your ACR in the portal and check to make sure that the repository is there:
+
+[acrrepo](images/acrrepo.PNG)
+
+3. Create AKS
+   1. Through the portal, create an AKS and ensure when you get to the "Integrations" tab, for Container registry, you select the one you created in step 1.
 
 <h4>Step 2:Connect to the AKS Service</h4>
 
