@@ -245,7 +245,7 @@ kubectl --namespace=jupyterhub get svc proxy-public
 
 Copy and past the EXTERNAL-IP into the bowser and it will take you to the login of your JupyterHub! :)
 
-![images/externalip.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/externalip.PNG)
+![images/externalip.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/105fc0a4cb9d6e9eb50b0d6b1f2ed61235b3381d/images/externalip.PNG)
 
 
 And there you have it! You created your very own JupyterHub! A couple things to note is...
