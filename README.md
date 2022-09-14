@@ -87,7 +87,7 @@ In order to avoid any authentication errors and ensure that all required softwar
    4. You can copy the code from [azure-pipelines](azure-pipelines.yml)
   After the pipeline ran successfully, go to your ACR in the portal and check to make sure that the repository is there:
 
-![acrrepo](JupyterHub\images\HelmInstall.PNG)
+![acrrepo](https://github.com/ChristinaLanaski/JupyterHub/blob/84c9b5e4ebdd73befd399e379dffeaccb4eab904/images/acrrepo.PNG)
 
 3. Create AKS
    1. Through the portal, create an AKS and ensure when you get to the "Integrations" tab, for Container registry, you select the one you created in step 1.
@@ -100,7 +100,7 @@ Once the AKS cluster is deployed from terraform, make sure it is in a running st
 
 A window will pop up asking to connect to the cluster through CLI. Click on the CLI icon on the top task bar which will open up the cloud shell:
 
-![image](images\cliconnect.PNG)
+![images\cliconnect.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/84c9b5e4ebdd73befd399e379dffeaccb4eab904/images/cliconnect.PNG))
 
 Copy and paste the first two commands into the cmd:
 
@@ -131,7 +131,7 @@ Now that you have Helm installed, you can pull the latest Helm repo for Juypter:
 ```
 You should get “….Happy Helming!” message back:
 
-![HelmInstall.png]([images\HelmInstall.PNG)](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/JHHelmChartInstall.PNG)
+![HelmInstall.png](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/JHHelmChartInstall.PNG)
 
 <h4>Step 4: Create the Namespace</h4>
 
@@ -148,7 +148,7 @@ Create the namespace by executing the following command:
 ```bash
 kubectl create namespace <name-of-namespace>
 ```
-[images\namespacecreate.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/namespacecreate.PNG)
+![namespacecreate.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/namespacecreate.PNG)
 
 Then execute the following to verify that the namesapce was created:
 
@@ -158,7 +158,7 @@ kubectl get namespaces
 
 
 
-[devnamespace.png]([images\devnamespace.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/devnamespace.PNG))
+![devnamespace.png](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/devnamespace.PNG))
 
 
 
@@ -174,7 +174,7 @@ touch config.yaml
 ```
 Ensure the file is there by executing "ls":
 
-[step3.PNG]([images\step3.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/step3.PNG))
+![step3.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/step3.PNG))
 
 
 This is the file that will hold all the configurations for your JuypterHub. For now, put some comments in the file (JupyterHub may not run if nothing is in the config.yaml file). You can modify the file contents by running:
@@ -200,7 +200,7 @@ To modify the contents of the file, press "i" on the keyboard. Then paste:
 
 Verify you saved the contents inside the file by running "cat config.yaml":
 
-[images\initalyamlcomment.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/initalyamlcomment.PNG))
+![images\initalyamlcomment.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/initalyamlcomment.PNG))
 
 
 <h4>Step 6: Install the JupyterHub HELM Chart onto your config file</h4>
@@ -223,7 +223,7 @@ helm upgrade --cleanup-on-fail \
 
 Once the update is completed, you will get the following message:
 
-[images/JHHelmChartInstall.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/HelmInstall.PNG)
+![images/JHHelmChartInstall.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/HelmInstall.PNG)
 
 Once you recieve that message, make sure your hub and proxy are ready and running:
 
@@ -231,7 +231,7 @@ Once you recieve that message, make sure your hub and proxy are ready and runnin
 kubectl --namespace=jupyterhub get pod
 ```
 
-[images/HUB.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/HUB.PNG)
+![images/HUB.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/HUB.PNG)
 
 In order to actually access your JuypterHub, execute 
 
@@ -241,7 +241,7 @@ kubectl --namespace=jupyterhub get svc proxy-public
 
 Copy and past the EXTERNAL-IP into the bowser and it will take you to the login of your JupyterHub! :)
 
-[images/externalip.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/externalip.PNG)
+![images/externalip.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/externalip.PNG)
 
 
 And there you have it! You created your very own JupyterHub! A couple things to note is...
@@ -325,11 +325,11 @@ singleuser:
 
 This is will take a couple of minutes to update, but once it does, browse to your JupyterHub and you will see a new UI once you login:
 
-[images/ConfiguredUI.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/ConfiguredUI.PNG)
+![images/ConfiguredUI.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/ConfiguredUI.PNG)
 
 With all these configurations, this is what the final config.yaml file looks like:
 
-[images/configend.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/configend.PNG)
+![images/configend.PNG](https://github.com/ChristinaLanaski/JupyterHub/blob/9925fdecaf1143f8d04cebe27594d307588246f1/images/configend.PNG)
 
 #### Useful Links ###
 [Using ACR with AKS](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli)
